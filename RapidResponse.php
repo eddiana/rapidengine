@@ -1,6 +1,6 @@
 <?php
 /*
- * @package		RapidEngine
+* @package		RapidEngine
 * @copyright	(c) 2014 Ed Diana
 * @license		MIT License
 *

@@ -1,6 +1,6 @@
 <?php
 /*
- * @package		RapidEngine
+* @package		RapidEngine
 * @copyright	(c) 2014 Ed Diana
 * @license		MIT License
 *
@@ -205,7 +205,16 @@ class RapidEngineClass
 			}
 			else
 			{
-				$h = $r->GetResponse( 0);
+				//are we calling the default response, or a pre-defined method?
+				if (strlen( $c->Method) > 0)
+				{
+					$m = $c->Method;
+					$h = $r->$m();	
+				}
+				else
+				{					
+					$h = $r->GetResponse( 0);
+				}
 			}
 			
 			//check errors
@@ -326,16 +335,30 @@ $RapidEngine = new RapidEngineClass();
 
 class RapidEngineAction
 {
-	var $Action = '';
-	var $Class;  //should be a class descended from RapidEngineResponse
-	var $Component = "";  //if a plugin component, sor specifying paths
+	public $Action = '';
+	public $Class = '';  //should be a class descended from RapidEngineResponse
+	public $Method = ''; //specific method to execute
+	public $Component = "";  //if a plugin component, sor specifying paths
 	
 	function __construct( $action, $class, $comp = "")
 	{
 		$this->Action = $action;
-		$this->Class = $class;
+
+		if (strpos( $class, '->') === false)
+		{
+			$this->Class = $class;			
+		}
+		else
+		{
+			$a = explode( '->', $class);
+			$this->Class = $a[0];
+			$this->Method = $a[1];
+		}
+		
 		$this->Component = $comp;
 	}
+	
+	
 }
 
 
