@@ -8,9 +8,9 @@ Goals are:
  - As little 'boiler plate' code as possible inside the application.
  - All code, no XML or command line tools.  
  
+  
  
- 
- ### Routing
+ #### Routing
  
  ```php
  //implemented
@@ -27,3 +27,23 @@ Goals are:
  $RapidEngine->DefineAction( '/path', function() { ...some code... });
   
  ```
+
+ 
+ #### Session Handling
+ 
+ Database-based session handling is included in the framework.  This is the CREATE statement for the sessions table.
+ 
+ ```sql
+ CREATE TABLE `sessions` (
+	`session_id` VARCHAR(100) NOT NULL DEFAULT '',
+	`value` LONGTEXT NULL,
+	`date_created` DATETIME NULL DEFAULT NULL,
+	`last_modified` DATETIME NULL DEFAULT NULL,
+	PRIMARY KEY (`session_id`)
+)
+COLLATE='latin1_swedish_ci'
+ENGINE=InnoDB;
+ 
+ ```
+ 
+ Session values are read/written using the standard $_SESSION superglobal variable.
