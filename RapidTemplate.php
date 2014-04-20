@@ -24,15 +24,15 @@
 
 class RapidTemplate
 {
-	var $Loaded = false;
-	var $TemplateFile = '';//file name
-	var $Template = ''; //file contents
-	var $DeviceType = '';  //none, 'tablet', 'phone', etc, for device variant templates
-	var $Tags = '';
-	var $Values = '';
-	var $TemplatePaths;
+	public $Loaded = false;
+	public $TemplateFile = '';//file name
+	public $Template = ''; //file contents
+	public $DeviceType = '';  //none, 'tablet', 'phone', etc, for device variant templates
+	public $Tags = '';
+	public $Values = '';
+	public $TemplatePaths;
 	
-	function __construct( $sFile, $aTemplatePaths, $sDeviceType = '')
+	public function __construct( $sFile, $aTemplatePaths, $sDeviceType = '')
 	{
 		$this->Tags = array();
 		$this->Values = array();
@@ -42,7 +42,7 @@ class RapidTemplate
 		$this->Load( $sFile);
 	}	
 	
-	function Load( $sFile)
+	public function Load( $sFile)
 	{
 		$n = count( $this->TemplatePaths);
 		for ($i = 1; $i <= $n; $i++)
@@ -72,12 +72,12 @@ class RapidTemplate
 		}	
 	}
 	
-	function SetTag( $sTag, $sValue)
+	public function SetTag( $sTag, $sValue)
 	{
 		$this->Tags[ $sTag] = $sValue;
 	}
 	
-	function Merge()
+	public function Merge()
 	{
 		$s = $this->Template;
 		foreach ($this->Tags as $t => $v)

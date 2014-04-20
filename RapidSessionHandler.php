@@ -24,8 +24,8 @@
 
 class RapidSessionHandler 
 {
-	var $DB;
-	var $SessionID;
+	public $DB;
+	public $SessionID;
 
 	public function __construct( $db, $name = '') 
 	{

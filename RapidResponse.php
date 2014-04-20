@@ -24,17 +24,16 @@
 
 class RapidEngineResponse
 {
-	//var $h = ''; //html response	
-	var $Title = ''; //Page title, if any
-	var $Template = ''; //template for response, if any
-	var $SkipTemplate = false;
+	public $Title = ''; //Page title, if any
+	public $Template = ''; //template for response, if any
+	public $SkipTemplate = false;
 	
 	//tags for parent templates
-	var $Tags;
-	var $Values;
+	public $Tags;
+	public $Values;
 	
 	//whitelisted tasks
-	var $Tasks;
+	public $Tasks;
 	
 	function __construct()
 	{
@@ -43,30 +42,30 @@ class RapidEngineResponse
 		$this->Tasks = array();
 	}
 	
-	function GetResponse( $Application)
+	public function GetResponse( $Application)
 	{
 			
 	}
 	
-	function AddTask( $sFunc)
+	public function AddTask( $sFunc)
 	{
 		$this->Tasks[] = $sFunc;
 	}
 	
-	function TaskAvailable( $sTask)
+	public function TaskAvailable( $sTask)
 	{
 		return in_array( $sTask, $this->Tasks);
 	}
 	
 	//abstract away linking between response and RapidEngine object
-	function GetTemplate( $sName)
+	public function GetTemplate( $sName)
 	{
 		global $RapidEngine;
 		$tpl = new RapidTemplate( $sName, $RapidEngine->TemplatePaths, $RapidEngine->DeviceType);
 		return $tpl;
 	}
 	
-	function SetTag( $sTag, $sValue)
+	public function SetTag( $sTag, $sValue)
 	{
 		$this->Tags[] = $sTag;
 		$this->Values[] = $sValue;	

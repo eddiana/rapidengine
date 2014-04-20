@@ -37,24 +37,25 @@ require_once("actions/DefaultRapidResponse.php");
 
 function RDebug( $s)
 {
-	//echo $s . "<br>";	
+	//echo $s . "<br>";
+	error_log( $s);	
 }
 
 class RapidEngineClass
 {
-	var $Options;
-	var $Actions;
-	var $Components;
-	var $ComponentPaths;
-	var $ClassPaths;
-	var $TemplatePaths;
-	var $DefaultTemplate = '';
-	var $Databases;
-	var $SessionHandler = 0;
-	var $Application = 0; //user application object
-	var $DeviceType = '';  //for templating
+	public $Options;
+	public $Actions;
+	public $Components;
+	public $ComponentPaths;
+	public $ClassPaths;
+	public $TemplatePaths;
+	public $DefaultTemplate = '';
+	public $Databases;
+	public $SessionHandler = 0;
+	public $Application = 0; //user application object
+	public $DeviceType = '';  //for templating
 	
-	var $ComponentsInitialized = false;
+	public $ComponentsInitialized = false;
 	
 	function __construct()
 	{
@@ -67,29 +68,34 @@ class RapidEngineClass
 		$this->Databases = array();
 	}	
 	
-	function DefineAction( $action, $class)
+	public function DefineAction( $action, $class)
 	{
-
+		if ((substr( $action, 0, 1) != '/') && (substr( $action, 0, 1) != '@')) 
+		{
+			$action = '/' . $action;
+		}
+		
+		RDebug( 'defining action ' . $action);
 		$this->Actions[$action] = new RapidEngineAction( $action, $class);	
 	}
 
-	function AddClassPath( $sPath)
+	public function AddClassPath( $sPath)
 	{
 		$this->ClassPaths[] = AddTrailingSlash( $sPath);
 	}
 	
-	function AddComponentPath( $sPath)
+	public function AddComponentPath( $sPath)
 	{
 		$this->ComponentPaths[] = AddTrailingSlash( $sPath);
 	}
 
-	function AddTemplatePath( $sPath)
+	public function AddTemplatePath( $sPath)
 	{
 		$this->TemplatePaths[] = AddTrailingSlash( $sPath);
 	}
 
 
-	function UseComponent( $sComponent, $sPath = '')
+	public function UseComponent( $sComponent, $sPath = '')
 	{
 		//also check for existing, pre req's etc.
 		
@@ -100,7 +106,7 @@ class RapidEngineClass
 		$this->Components[] = $a;
 	}
 
-	function AddDatabase( $a)
+	public function AddDatabase( $a)
 	{
 		//'dbms' (mysql), 'server', 'database', 'user', 'password'
 		//'db' is the db object
@@ -109,7 +115,7 @@ class RapidEngineClass
 	}
 	
 	//initializes the first database connection
-	function InitDatabase()
+	public function InitDatabase()
 	{
 		if (count( $this->Databases) > 0)
 		{
@@ -126,9 +132,33 @@ class RapidEngineClass
 		
 	}
 
-	function Dispatch( $action)
+	public function Dispatch( $override_action = '')
 	{
 		global $RapidEngineDefaultActionPath;
+		
+
+		//are we reading the action from the request, or having one manually passed?
+		if (strlen( $override_action) > 0)
+		{
+			$action = $override_action;
+		}
+		else
+		{
+			//get the uri requested, minus any get params
+			$a = explode( '?', $_SERVER['REQUEST_URI']);
+			//$action = substr( $a[0], 1);
+			$action = $a[0];
+			
+			//override with get?  will prob be removed
+			if (strlen( $_GET['action']) > 0)
+			{
+				$action = '/' . $_GET['action'];
+			}
+			if (strlen($action) < 1)
+			{
+				$action = '/';
+			}
+		}
 		
 		//add local template paths so they are the end of the list
 		$this->AddTemplatePath( AddTrailingSlash( dirname(__FILE__)) . 'templates');
@@ -162,6 +192,7 @@ class RapidEngineClass
 		
 		RDebug( "Action " . $action);
 			
+		//do we have a handler for this action?
 		if ( array_key_exists( $action, $this->Actions))
 		{
 			$c = $this->Actions[$action];
@@ -169,7 +200,15 @@ class RapidEngineClass
 		}
 		else
 		{
-			$c = $this->Actions['/'];	
+			//is there a 404 handler for the missing request?
+			if ( array_key_exists( '@404', $this->Actions))
+			{
+				$c = $this->Actions['@404'];
+			}
+			else
+			{			
+				$c = $this->Actions['/'];
+			}	
 		}
 
 		
@@ -209,7 +248,7 @@ class RapidEngineClass
 				if (strlen( $c->Method) > 0)
 				{
 					$m = $c->Method;
-					$h = $r->$m();	
+					$h = $r->$m( 0);	
 				}
 				else
 				{					
@@ -264,13 +303,13 @@ class RapidEngineClass
 			
 	}
 	
-	function Redirect( $url)
+	public function Redirect( $url)
 	{
 		header("Location: " . $url);
 		die();
 	}
 	
-	function FindClassFile( $sClass)
+	public function FindClassFile( $sClass)
 	{
 		global $RapidEngineDefaultActionPath;
 		
@@ -293,7 +332,7 @@ class RapidEngineClass
 		
 	}
 	
-	function InitializeComponents()
+	public function InitializeComponents()
 	{
 		if ($this->ComponentsInitialized)
 		{

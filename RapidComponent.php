@@ -28,9 +28,9 @@
 
 class RapidComponent
 {
-	var $Name = '';
+	public $Name = '';
 	
-	function DefineAction( $action, $responseclass)
+	public function DefineAction( $action, $responseclass)
 	{
 		global $RapidEngine;
 		

@@ -24,20 +24,20 @@
 
 class RapidApplication
 {
-	var $Initiated = false;
+	public $Initiated = false;
 	
 	//tags for parent templates
-	var $Tags;
+	public $Tags;
 
 	/*
 	 *  Called before dispatch.  Descendents should initialize common resources here
 	 */
-	function Init()
+	public function Init()
 	{
 		
 	}
 	
-	function SetTag( $sTag, $sValue)
+	public function SetTag( $sTag, $sValue)
 	{
 		$this->Tags[$sTag] = $sValue;
 	}
