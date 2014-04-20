@@ -12,7 +12,7 @@ Goals are:
  
  ### Routing
  
- '''php
+ ```php
  //implemented
  $RapidEngine->DefineAction( '/path', 'SomeClass');
  $RapidEngine->DefineAction( '/path', 'SomeClass->SomeMethod');
@@ -26,4 +26,4 @@ Goals are:
  $RapidEngine->DefineAction( '/path', 'SomeFunction()');
  $RapidEngine->DefineAction( '/path', function() { ...some code... });
   
- '''
+ ```
