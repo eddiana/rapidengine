@@ -38,7 +38,7 @@ require_once("actions/DefaultRapidResponse.php");
 function RDebug( $s)
 {
 	//echo $s . "<br>";
-	error_log( $s);	
+	//error_log( $s);	
 }
 
 class RapidEngineClass
@@ -75,7 +75,7 @@ class RapidEngineClass
 			$action = '/' . $action;
 		}
 		
-		RDebug( 'defining action ' . $action);
+		//RDebug( 'defining action ' . $action);
 		$this->Actions[$action] = new RapidEngineAction( $action, $class);	
 	}
 
